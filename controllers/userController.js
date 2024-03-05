@@ -112,7 +112,7 @@ exports.editUser = async (req, res) => {
         const { email, newEmail, newpassword, newaccountType } = req.body;
         let emailF= false, passwordF= false, accountTypeF = false;
         if (email){
-            let user1 = await user.findOne({ Email: email })
+            var user1 = await user.findOne({ Email: email })
         }
         else
         {
@@ -134,7 +134,7 @@ exports.editUser = async (req, res) => {
             emailF = true;
         }
         if(newpassword){    
-            if (!isGoodPassword(password)) {
+            if (!isGoodPassword(newpassword)) {
                 console.log('Password does not meet requirements');
                 res.status(400).json({ error: 'Password does not meet requirements' });
                 return;
@@ -146,14 +146,15 @@ exports.editUser = async (req, res) => {
             }
             passwordF = true;
         }
-        if(newaccountType){
-            if(user1.accountType === newaccountType){
+        if(newaccountType != null){
+            if(user1.accountType == newaccountType){
                 console.log('New account type is the same as old account type');
                 res.status(400).json({ error: 'New account type is the same as old account type' });
                 return;
             }
             accountTypeF = true;
         }
+        console.log('User updated');
     }
     catch (err) {
         console.error('Error editing user:', err);

@@ -22,3 +22,14 @@ Content-Type: application/json
 }
 
 
+###
+POST http://localhost:3000/user/edit
+Content-Type: application/json
+
+{
+    "email": "sola3l@gmail.com",
+    "newEmail": "sola4l@gmail.com",
+    "newpassword": "Ba123456!",
+    "newaccountType":false
+}
+
