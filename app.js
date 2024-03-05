@@ -5,7 +5,7 @@ const PORT = process.env.PORT;
 const mongoose =require('mongoose');
 const bodyParser = require('body-parser');
 const user = require('./models/user');
-const userfuncs = require('./controllers/userfuncs');
+const userroutes = require('./routes/userFuncs');
 mongoose.connect(process.env.DATABASE_URL)
 const db =mongoose.connection;
 db.on('error', (error) => console.log(error));
@@ -15,14 +15,12 @@ db.once('open', () => console.log('connected to database'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use('/user', userroutes);
+
 app.get('/', (req, res) => {    
     res.send('Hello World!');
 }  );
 
-
-app.post('/users', async (req, res) => {
-    const tryy = registerUser(req.body);
-  });
 
 app.listen(PORT, () => {
     console.log(`Example app listening on port ${PORT}!`);

@@ -3,13 +3,22 @@
 GET http://localhost:3000/
 
 ###
-POST http://localhost:3000/users
+POST http://localhost:3000/user/register
 Content-Type: application/json
 
 {
-    "email": "solal@gmail.com",
-    "password": "123456",
+    "email": "sola3l@gmail.com",
+    "password": "Aa123456!",
     "accountType":"true"
+}
+
+###
+POST http://localhost:3000/user/login
+Content-Type: application/json
+
+{
+    "email": "sola3l@gmail.com",
+    "password": "Aa123456!"
 }
 
 
