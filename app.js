@@ -5,7 +5,7 @@ const PORT = process.env.PORT;
 const mongoose =require('mongoose');
 const bodyParser = require('body-parser');
 const user = require('./models/user');
-const userroutes = require('./routes/userFuncs');
+const userroutes = require('./routes/userRoutes');
 mongoose.connect(process.env.DATABASE_URL)
 const db =mongoose.connection;
 db.on('error', (error) => console.log(error));

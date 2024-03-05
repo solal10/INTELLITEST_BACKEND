@@ -106,3 +106,57 @@ exports.loginUser = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
+exports.editUser = async (req, res) => {
+    try {
+        const { email, newEmail, newpassword, newaccountType } = req.body;
+        let emailF= false, passwordF= false, accountTypeF = false;
+        if (email){
+            let user1 = await user.findOne({ Email: email })
+        }
+        else
+        {
+            res.status(400).json({ error: 'Email is empty' });
+            return;
+        }
+        if(newEmail){
+            if (!isValidEmail(newEmail) ) {
+                console.log('Invalid new email address');
+                res.status(400).json({ error: 'Invalid new email address' });
+                return;
+            }
+            let user2 = await user.findOne({ Email: newEmail })
+            if (user2) {
+                console.log('User already exist');
+                res.status(400).json({ error: 'User already exist' });
+                return;
+            }
+            emailF = true;
+        }
+        if(newpassword){    
+            if (!isGoodPassword(password)) {
+                console.log('Password does not meet requirements');
+                res.status(400).json({ error: 'Password does not meet requirements' });
+                return;
+            }
+            if(newpassword === user1.Password){
+                console.log('New password is the same as old password');
+                res.status(400).json({ error: 'New password is the same as old password' });
+                return;
+            }
+            passwordF = true;
+        }
+        if(newaccountType){
+            if(user1.accountType === newaccountType){
+                console.log('New account type is the same as old account type');
+                res.status(400).json({ error: 'New account type is the same as old account type' });
+                return;
+            }
+            accountTypeF = true;
+        }
+    }
+    catch (err) {
+        console.error('Error editing user:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
