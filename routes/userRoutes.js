@@ -8,4 +8,6 @@ router.post('/login', userFuncs.loginUser);
 
 router.post('/edit', userFuncs.editUser);
 
+router.post('/delete', userFuncs.deleteUser);
+
 module.exports = router;

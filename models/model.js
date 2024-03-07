@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const model = new mongoose.Schema({
     name: {type:String, required: true},
     CSVpath: {type:String, required: true},

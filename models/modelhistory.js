@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const modelsHistory = new mongoose.Schema({
     model_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Model', required: true},
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},

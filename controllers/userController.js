@@ -1,4 +1,6 @@
 const user = require('../models/user');
+const model = require('../models/model');
+const modelhistory = require('../models/modelhistory');
 
 function isGoodPassword(password) {
     // Check if password has at least one lowercase letter
@@ -111,8 +113,9 @@ exports.editUser = async (req, res) => {
     try {
         const { email, newEmail, newpassword, newaccountType } = req.body;
         let emailF= false, passwordF= false, accountTypeF = false;
+        var user1;
         if (email){
-            var user1 = await user.findOne({ Email: email })
+            user1 = await user.findOne({ Email: email })
         }
         else
         {
@@ -155,9 +158,44 @@ exports.editUser = async (req, res) => {
             accountTypeF = true;
         }
         console.log('User updated');
+        if(emailF){
+            user1.Email = newEmail;
+        }
+        if(passwordF){
+            user1.Password = newpassword;
+        }
+        if(accountTypeF){
+            user1.accountType = newaccountType;
+        }
+        await user.updateOne({Email: email}, user1);
     }
     catch (err) {
         console.error('Error editing user:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+exports.deleteUser = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            console.log('Missing required fields');
+            res.status(400).json({ error: 'Missing required fields' });
+            return;
+        }
+        let user1 = await user.findOne({ Email: email })
+        if (!user1) {
+            console.log('User does not exist');
+            res.status(400).json({ error: 'User does not exist' });
+            return;
+        }
+        await model.deleteMany({user_id: user1._id});
+        await modelhistory.deleteMany({user_id: user1._id});
+        await user.deleteOne({Email: email});
+        console.log('User deleted');
+        res.status(200).json({ message: 'User deleted' });
+    } catch (err) {
+        console.error('Error deleting user:', err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
