@@ -7,9 +7,9 @@ POST http://localhost:3000/user/register
 Content-Type: application/json
 
 {
-    "email": "sola3l@gmail.com",
+    "email": "elad@gmail.com",
     "password": "Aa123456!",
-    "accountType":"true"
+    "accountType":false
 }
 
 ###

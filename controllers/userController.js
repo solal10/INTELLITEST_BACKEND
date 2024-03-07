@@ -44,7 +44,7 @@ function isValidEmail(email) {
 exports.registerUser = async (req, res) => {
     try {
         const { email, password, accountType } = req.body;
-        if (!email || !password || !accountType) {
+        if (!email || !password || accountType == null) {
             console.log('Missing required fields');
           res.status(400).json({ error: 'Missing required fields' });
           return;
@@ -73,7 +73,7 @@ exports.registerUser = async (req, res) => {
                 accountType: accountType
               });
               await newUser.save();
-              console.log('User created)');
+              console.log('User created');
               res.status(201).json(newUser);           
         } 
         } catch (err) {
@@ -196,6 +196,45 @@ exports.deleteUser = async (req, res) => {
         res.status(200).json({ message: 'User deleted' });
     } catch (err) {
         console.error('Error deleting user:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+exports.getUser = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            console.log('Missing required fields');
+            res.status(400).json({ error: 'Missing required fields' });
+            return;
+        }
+        let user1 = await user.findOne({ Email: email })
+        if (!user1) {
+            console.log('User does not exist');
+            res.status(400).json({ error: 'User does not exist' });
+            return;
+        }
+        console.log('User found');
+        res.status(200).json(user1);
+    } catch (err) {
+        console.error('Error getting user:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+exports.getUserModels = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            console.log('Missing required fields');
+            res.status(400).json({ error: 'Missing required fields' });
+            return;
+        }
+        let models = await model.find({ user_id: user1._id });
+        console.log('Models found');
+        res.status(200).json(models);
+    } catch (err) {
+        console.error('Error getting user models:', err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }

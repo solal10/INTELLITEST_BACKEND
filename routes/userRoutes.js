@@ -10,4 +10,11 @@ router.post('/edit', userFuncs.editUser);
 
 router.post('/delete', userFuncs.deleteUser);
 
+router.post('/get', userFuncs.getUser);
+
+router.post('/getModels', userFuncs.getUserModels);
+
+
+
+
 module.exports = router;
