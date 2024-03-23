@@ -1,6 +1,7 @@
 const user = require('../models/user');
 const model = require('../models/model');
 const modelhistory = require('../models/modelhistory');
+const nodemailer = require('nodemailer');
 
 function isGoodPassword(password) {
     // Check if password has at least one lowercase letter
@@ -41,6 +42,45 @@ function isValidEmail(email) {
     return emailRegex.test(email);
 }
 
+function getRandomLower() {
+    return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+  }
+  
+  function getRandomUpper() {
+    return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+  }
+  
+  function getRandomNumber() {
+    return +String.fromCharCode(Math.floor(Math.random() * 10) + 48);
+  }
+  
+  function getRandomSymbol() {
+    const symbols = '!@#$%^&*()_+=';
+    return symbols[Math.floor(Math.random() * symbols.length)];
+  }
+
+  function generateRandomPassword() {
+    const length = 8;
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+    let retVal = "";
+    const randomFunc = {
+      lower: getRandomLower,
+      upper: getRandomUpper,
+      number: getRandomNumber,
+      symbol: getRandomSymbol,
+    };
+    retVal += getRandomLower();
+    retVal += getRandomUpper();
+    retVal += getRandomNumber();
+    retVal += getRandomSymbol();
+    for (let i = 4; i < length; i++) {
+      const keys = Object.keys(randomFunc);
+      const randomKey = keys[Math.floor(Math.random() * keys.length)];
+      retVal += randomFunc[randomKey]();
+    }
+    return retVal.split('').sort(() => Math.random() - 0.5).join('');
+  }
+  
 exports.registerUser = async (req, res) => {
     try {
         const { email, password, accountType } = req.body;
@@ -235,6 +275,53 @@ exports.getUserModels = async (req, res) => {
         res.status(200).json(models);
     } catch (err) {
         console.error('Error getting user models:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+exports.recoverPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            console.log('Missing required fields');
+            res.status(400).json({ error: 'Missing required fields' });
+            return;
+        }
+        let user1 = await user.findOne({ Email: email })
+        if (!user1) {
+            console.log('User does not exist');
+            res.status(400).json({ error: 'User does not exist' });
+            return;
+        }
+        const newPassword = generateRandomPassword();
+        const mailOptions = {
+            from: 'intellitestrecovery@gmail.com',
+            to: email,
+            subject: 'Password Recovery',
+            text: `Your new password is: ${newPassword}\nPlease change it after logging in.`,
+        };
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.GMAIL_USER, // Replace with your Gmail address
+              pass: process.env.GMAIL_PASS, // Replace with your Gmail password or App Password
+            },
+          });
+        transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+            res.status(500).send('Error sending email');
+            } 
+            else {
+                console.log('Email sent: ' + info.response);
+                res.status(200).send('Password recovery email sent');
+            }
+          });
+        user1.Password = newPassword;
+        await user.updateOne({Email: email}, user1);
+    }
+    catch (err) {
+        console.error('Error recovering password:', err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }

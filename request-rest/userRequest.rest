@@ -7,7 +7,7 @@ POST http://localhost:3000/user/register
 Content-Type: application/json
 
 {
-    "email": "elad@gmail.com",
+    "email": "elad.1999.1999@gmail.com",
     "password": "Aa123456!",
     "accountType":false
 }
@@ -39,5 +39,13 @@ Content-Type: application/json
 
 {
     "email": "sola5l@gmail.com"
+}
+
+###
+POST http://localhost:3000/user/recover-password
+Content-Type: application/json
+
+{
+    "email": "elad.1999.1999@gmail.com"
 }
 
