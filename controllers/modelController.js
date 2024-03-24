@@ -1,21 +1,20 @@
 const model = require('../models/model');
-const { findOneAndDelete } = require('../models/user');
 
 exports.addModel = async (req, res) => {
     try {
-        const { name, CSVpath, user_id } = req.body;
+        const { name, CSVpath, user_id, check1,check2,check3,check4,check5} = req.body;
         if (!name || !CSVpath || !user_id ) {
             console.log('Missing required fields');
             res.status(400).json({ error: 'Missing required fields' });
             return;
-        }
+        }       
         let model = await model.findOne({ name: name, user_id: user_id });
         if (model) {
             console.log('Model already exist');
             res.status(400).json({ error: 'Model already exist' });
             return;
         }
-        let newModel = new model({ name, CSVpath, user_id });
+        let newModel = new model({ name, CSVpath, user_id,check1,check2,check3,check4,check5});
         await newModel.save();
         res.status(200).json({ message: 'Model added successfully' });
     } catch (err) {
@@ -122,7 +121,7 @@ exports.updateModel = async (req, res) => {
             res.status(400).json({ error: 'User does not exist' });
             return;
         }
-        let model1 = findOneAndDelete({ name: name, user_id: user_id}, { CSVpath: newCSVpath });
+        let model1 = findOneAndUpdate({ name: name, user_id: user_id}, { CSVpath: newCSVpath });
         if (!model1) {
             console.log('Model does not exist');
             res.status(400).json({ error: 'Model does not exist' });
