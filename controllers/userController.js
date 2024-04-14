@@ -2,6 +2,7 @@ const user = require('../models/user');
 const model = require('../models/model');
 const modelhistory = require('../models/modelhistory');
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
 
 function isGoodPassword(password) {
     // Check if password has at least one lowercase letter
@@ -86,39 +87,37 @@ exports.registerUser = async (req, res) => {
         const { email, password, accountType } = req.body;
         if (!email || !password || accountType == null) {
             console.log('Missing required fields');
-          res.status(400).json({ error: 'Missing required fields' });
-          return;
+            return res.status(400).json({ error: 'Missing required fields' });
         }
         if (!isValidEmail(email) ) {
             
             console.log('Invalid email address');
-            res.status(400).json({ error: 'Invalid email address' });
-            return;
+            return res.status(400).json({ error: 'Invalid email address' });
         }
         let user1 = await user.findOne({ Email: email })
             if (user1) {
                 console.log('User already exists');
-                res.status(400).json({ error: 'User already exists' });
-                return;
+                return res.status(400).json({ error: 'User already exists' });
             }
         if (!isGoodPassword(password)) {
             console.log('Password does not meet requirements');
-            res.status(400).json({ error: 'Password does not meet requirements' });
-            return;
+            return res.status(400).json({ error: 'Password does not meet requirements' });
             }
         else {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
             const newUser = new user({
                 Email: email,
-                Password: password,
+                Password: hashedPassword,
                 accountType: accountType
               });
               await newUser.save();
               console.log('User created');
-              res.status(201).json(newUser);           
+              return res.status(201).json(newUser);           
         } 
         } catch (err) {
             console.error('Error creating user:', err);
-            res.status(500).json({ error: 'Internal Server Error' });
+            return res.status(500).json({ error: 'Internal Server Error' });
         }  
     };
 
@@ -127,25 +126,23 @@ exports.loginUser = async (req, res) => {
         const { email, password } = req.body;
         if (!email || !password) {
             console.log('Missing required fields');
-            res.status(400).json({ error: 'Missing required fields' });
-            return;
+            return res.status(400).json({ error: 'Missing required fields' });
         }
         let user1 = await user.findOne({ Email: email })
         if (!user1) {
             console.log('User does not exist');
-            res.status(400).json({ error: 'User does not exist' });
-            return;
+            return res.status(400).json({ error: 'User does not exist' });
         }
-        if (user1.Password !== password) {
+        const validPassword = await bcrypt.compare(password, user1.Password);
+        if (!validPassword) {
             console.log('Invalid password');
-            res.status(400).json({ error: 'Invalid password' });
-            return;
+            return res.status(400).json({ error: 'Invalid password' });
         }
         console.log('valid credentials, user logged in successfully');
-        res.status(200).json(user1);
+        return res.status(200).json(user1);
     } catch (err) {
         console.error('Error logging in user:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
@@ -182,7 +179,8 @@ exports.editUser = async (req, res) => {
                 res.status(400).json({ error: 'Password does not meet requirements' });
                 return;
             }
-            if(newpassword === user1.Password){
+            const validPassword = await bcrypt.compare(newpassword, user1.Password);
+            if(validPassword){
                 console.log('New password is the same as old password');
                 res.status(400).json({ error: 'New password is the same as old password' });
                 return;
@@ -202,7 +200,9 @@ exports.editUser = async (req, res) => {
             user1.Email = newEmail;
         }
         if(passwordF){
-            user1.Password = newpassword;
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(newpassword, salt);
+            user1.Password = hashedPassword;
         }
         if(accountTypeF){
             user1.accountType = newaccountType;
@@ -317,7 +317,9 @@ exports.recoverPassword = async (req, res) => {
                 res.status(200).send('Password recovery email sent');
             }
           });
-        user1.Password = newPassword;
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        user1.Password = hashedPassword;
         await user.updateOne({Email: email}, user1);
     }
     catch (err) {

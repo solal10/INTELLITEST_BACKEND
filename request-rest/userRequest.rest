@@ -7,7 +7,7 @@ POST http://localhost:3000/user/register
 Content-Type: application/json
 
 {
-    "email": "elad.1999.1999@gmail.com",
+    "email": "solal@gmail.com",
     "password": "Aa123456!",
     "accountType":false
 }
@@ -17,8 +17,8 @@ POST http://localhost:3000/user/login
 Content-Type: application/json
 
 {
-    "email": "sola3l@gmail.com",
-    "password": "Aa123456!"
+    "email": "solalohana@gmail.com",
+    "password": "@6QVkqv"
 }
 
 
@@ -27,10 +27,10 @@ POST http://localhost:3000/user/edit
 Content-Type: application/json
 
 {
-    "email": "sola4l@gmail.com",
-    "newEmail": "sola5l@gmail.com",
-    "newpassword": "Ca123456!",
-    "newaccountType":true
+    "email": "solal33333@gmail.com",
+    "newEmail": "solalohana@gmail.com",
+    "newpassword": "112433Aa!",
+    "newaccountType":false
 }
 
 ###
@@ -46,6 +46,6 @@ POST http://localhost:3000/user/recover-password
 Content-Type: application/json
 
 {
-    "email": "elad.1999.1999@gmail.com"
+    "email": "solalohana@gmail.com"
 }
 
