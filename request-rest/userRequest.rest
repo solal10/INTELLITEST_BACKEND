@@ -1,19 +1,19 @@
 ###
 
-GET http://localhost:3000/
+GET http://localhost:4000/
 
 ###
-POST http://localhost:3000/user/register
+POST http://localhost:4000/user/register
 Content-Type: application/json
 
 {
-    "email": "solal@gmail.com",
+    "email": "solalalalal@gmail.com",
     "password": "Aa123456!",
     "accountType":false
 }
 
 ###
-POST http://localhost:3000/user/login
+POST http://localhost:4000/user/login
 Content-Type: application/json
 
 {
@@ -23,7 +23,7 @@ Content-Type: application/json
 
 
 ###
-POST http://localhost:3000/user/edit
+POST http://localhost:4000/user/edit
 Content-Type: application/json
 
 {
@@ -34,7 +34,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3000/user/delete
+POST http://localhost:4000/user/delete
 Content-Type: application/json
 
 {
@@ -42,7 +42,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3000/user/recover-password
+POST http://localhost:4000/user/recover-password
 Content-Type: application/json
 
 {

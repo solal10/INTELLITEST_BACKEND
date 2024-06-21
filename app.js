@@ -6,6 +6,8 @@ const mongoose =require('mongoose');
 const bodyParser = require('body-parser');
 const user = require('./models/user');
 const userroutes = require('./routes/userRoutes');
+const cors = require('cors');
+
 
 mongoose.connect(process.env.DATABASE_URL)
   .then((result) => {
@@ -14,6 +16,10 @@ mongoose.connect(process.env.DATABASE_URL)
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cors({
+  origin: true // Allow requests from any origin
+}));
 
 app.use('/user', userroutes);
 
