@@ -17,12 +17,9 @@ mongoose.connect(process.env.DATABASE_URL)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cors({
-  origin: '*', // Allow all origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
+app.use(cors());
+app.options('*', cors()); // Enable preflight requests for all routes
+
 
 app.use('/user', userroutes);
 

@@ -84,8 +84,8 @@ function getRandomLower() {
   
 exports.registerUser = async (req, res) => {
     try {
-        const { email, password, accountType } = req.body;
-        if (!email || !password || accountType == null) {
+        const { fullname, email, password, accountType } = req.body;
+        if (!fullname || !email || !password || accountType == null) {
             console.log('Missing required fields');
             return res.status(400).json({ error: 'Missing required fields' });
         }
@@ -107,6 +107,7 @@ exports.registerUser = async (req, res) => {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
             const newUser = new user({
+                FullName: fullname,
                 Email: email,
                 Password: hashedPassword,
                 accountType: accountType

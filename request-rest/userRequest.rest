@@ -7,7 +7,8 @@ POST http://localhost:4000/user/register
 Content-Type: application/json
 
 {
-    "email": "solalalalal@gmail.com",
+    "fullname":"Solal Ohana",
+    "email": "eeeeeeea@gmail.com",
     "password": "Aa123456!",
     "accountType":false
 }
@@ -17,8 +18,8 @@ POST http://localhost:4000/user/login
 Content-Type: application/json
 
 {
-    "email": "solalohana@gmail.com",
-    "password": "@6QVkqv"
+    "email": "solalalala@gmail.com",
+    "password": "Aa123456!"
 }
 
 
