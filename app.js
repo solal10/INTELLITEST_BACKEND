@@ -4,8 +4,10 @@ const dotenv = require('dotenv').config();
 const PORT = process.env.PORT;
 const mongoose =require('mongoose');
 const bodyParser = require('body-parser');
-const user = require('./models/user');
 const userroutes = require('./routes/userRoutes');
+const idea = require('./routes/IdeasRoutes');
+
+
 const cors = require('cors');
 
 
@@ -22,6 +24,8 @@ app.options('*', cors()); // Enable preflight requests for all routes
 
 
 app.use('/user', userroutes);
+app.use('/idea', idea);
+
 
 app.get('/', (req, res) => {    
     res.send('Hello World!');
