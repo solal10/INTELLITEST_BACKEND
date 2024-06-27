@@ -3,7 +3,6 @@ const model = require('../models/model');
 const modelhistory = require('../models/modelhistory');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-import logo from '../Extras/logo.png'
 
 function isGoodPassword(password) {
     // Check if password has at least one lowercase letter
@@ -320,7 +319,7 @@ exports.recoverPassword = async (req, res) => {
                     <p>Thank you,</p>
                     <p>The Intellitest Team</p>
                     <div style="margin-top: 20px;">
-                        <img src=${logo} alt="Intellitest Icon" style="width: 50px; height: 50px;">
+                        <img src="https://ibb.co/ByD5x9z" alt="Intellitest Icon" style="width: 50px; height: 50px;">
                         <p style="font-size: 12px; color: #888;">Intellitest - Your trusted partner in software testing</p>
                     </div>
                 </div>
