@@ -28,6 +28,7 @@ POST http://localhost:4000/user/edit
 Content-Type: application/json
 
 {
+    "fullname": "solol",
     "email": "solal33333@gmail.com",
     "newEmail": "solalohana@gmail.com",
     "newpassword": "112433Aa!",

@@ -3,6 +3,7 @@ const model = require('../models/model');
 const modelhistory = require('../models/modelhistory');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
+import logo from '../Extras/logo.png'
 
 function isGoodPassword(password) {
     // Check if password has at least one lowercase letter
@@ -149,8 +150,8 @@ exports.loginUser = async (req, res) => {
 
 exports.editUser = async (req, res) => {
     try {
-        const { email, newEmail, newpassword, newaccountType } = req.body;
-        let emailF= false, passwordF= false, accountTypeF = false;
+        const {newfullname, email, newEmail, newpassword, newaccountType } = req.body;
+        let emailF = false, passwordF= false, accountTypeF = false, nameF = false;
         var user1;
         if (email){
             user1 = await user.findOne({ Email: email })
@@ -174,7 +175,7 @@ exports.editUser = async (req, res) => {
             }
             emailF = true;
         }
-        if(newpassword){    
+        if(newpassword){ 
             if (!isGoodPassword(newpassword)) {
                 console.log('Password does not meet requirements');
                 res.status(400).json({ error: 'Password does not meet requirements' });
@@ -196,6 +197,14 @@ exports.editUser = async (req, res) => {
             }
             accountTypeF = true;
         }
+        if(newfullname){
+            if(user1.FullName == newfullname){
+                console.log('New full name is the same as old full name');
+                res.status(400).json({ error: 'New account type is the same as old account type' });
+                return
+            }
+            nameF = true
+        }
         console.log('User updated');
         if(emailF){
             user1.Email = newEmail;
@@ -207,6 +216,9 @@ exports.editUser = async (req, res) => {
         }
         if(accountTypeF){
             user1.accountType = newaccountType;
+        }
+        if(nameF){
+            user1.FullName = newfullname;
         }
         await user.updateOne({Email: email}, user1);
     }
@@ -288,7 +300,7 @@ exports.recoverPassword = async (req, res) => {
             res.status(400).json({ error: 'Missing required fields' });
             return;
         }
-        let user1 = await user.findOne({ Email: email })
+        let user1 = await user.findOne({ Email: email });
         if (!user1) {
             console.log('User does not exist');
             res.status(400).json({ error: 'User does not exist' });
@@ -299,31 +311,42 @@ exports.recoverPassword = async (req, res) => {
             from: 'intellitestrecovery@gmail.com',
             to: email,
             subject: 'Password Recovery',
-            text: `Your new password is: ${newPassword}\nPlease change it after logging in.`,
+            html: `
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                    <p>Dear ${user1.FullName},</p>
+                    <p>We received a request to reset your password. Your new password is:</p>
+                    <p style="font-size: 16px; font-weight: bold;">${newPassword}</p>
+                    <p>Please change your password immediately after logging in for security purposes.</p>
+                    <p>Thank you,</p>
+                    <p>The Intellitest Team</p>
+                    <div style="margin-top: 20px;">
+                        <img src=${logo} alt="Intellitest Icon" style="width: 50px; height: 50px;">
+                        <p style="font-size: 12px; color: #888;">Intellitest - Your trusted partner in software testing</p>
+                    </div>
+                </div>
+            `,
         };
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-              user: process.env.GMAIL_USER, // Replace with your Gmail address
-              pass: process.env.GMAIL_PASS, // Replace with your Gmail password or App Password
+              user: process.env.GMAIL_USER,
+              pass: process.env.GMAIL_PASS,
             },
-          });
-        transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-            console.log(error);
-            res.status(500).send('Error sending email');
-            } 
-            else {
+        });
+        transporter.sendMail(mailOptions, function(error, info) {
+            if (error) {
+                console.log(error);
+                res.status(500).send('Error sending email');
+            } else {
                 console.log('Email sent: ' + info.response);
                 res.status(200).send('Password recovery email sent');
             }
-          });
+        });
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
         user1.Password = hashedPassword;
-        await user.updateOne({Email: email}, user1);
-    }
-    catch (err) {
+        await user.updateOne({ Email: email }, user1);
+    } catch (err) {
         console.error('Error recovering password:', err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
