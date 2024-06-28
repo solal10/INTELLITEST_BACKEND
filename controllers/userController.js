@@ -220,6 +220,7 @@ exports.editUser = async (req, res) => {
             user1.FullName = newfullname;
         }
         await user.updateOne({Email: email}, user1);
+        res.status(200).json({ message: 'User updated' });
     }
     catch (err) {
         console.error('Error editing user:', err);
