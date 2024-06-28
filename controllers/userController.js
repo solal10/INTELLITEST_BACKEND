@@ -150,7 +150,7 @@ exports.loginUser = async (req, res) => {
 exports.editUser = async (req, res) => {
     try {
         const {newfullname, email, newEmail, newpassword, newaccountType } = req.body;
-        let emailF = false, passwordF= false, nameF = false;
+        let emailF = false, passwordF= false;
         var user1;
         if (email){
             user1 = await user.findOne({ Email: email })
@@ -189,14 +189,8 @@ exports.editUser = async (req, res) => {
             passwordF = true;
         }
         if(newfullname){
-            if(user1.FullName == newfullname){
-                console.log('New full name is the same as old full name');
-                res.status(400).json({ error: 'New account type is the same as old account type' });
-                return
-            }
-            nameF = true
+            user1.FullName = newfullname;
         }
-        console.log('User updated');
         if(emailF){
             user1.Email = newEmail;
         }
@@ -206,9 +200,6 @@ exports.editUser = async (req, res) => {
             user1.Password = hashedPassword;
         }
         user1.accountType = newaccountType;
-        if(nameF){
-            user1.FullName = newfullname;
-        }
         await user.updateOne({Email: email}, user1);
         res.status(200).json({ message: 'User updated' });
     }
