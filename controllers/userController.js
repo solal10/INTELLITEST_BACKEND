@@ -150,7 +150,7 @@ exports.loginUser = async (req, res) => {
 exports.editUser = async (req, res) => {
     try {
         const {newfullname, email, newEmail, newpassword, newaccountType } = req.body;
-        let emailF = false, passwordF= false, accountTypeF = false, nameF = false;
+        let emailF = false, passwordF= false, nameF = false;
         var user1;
         if (email){
             user1 = await user.findOne({ Email: email })
@@ -188,14 +188,6 @@ exports.editUser = async (req, res) => {
             }
             passwordF = true;
         }
-        if(newaccountType != null){
-            if(user1.accountType == newaccountType){
-                console.log('New account type is the same as old account type');
-                res.status(400).json({ error: 'New account type is the same as old account type' });
-                return;
-            }
-            accountTypeF = true;
-        }
         if(newfullname){
             if(user1.FullName == newfullname){
                 console.log('New full name is the same as old full name');
@@ -213,9 +205,7 @@ exports.editUser = async (req, res) => {
             const hashedPassword = await bcrypt.hash(newpassword, salt);
             user1.Password = hashedPassword;
         }
-        if(accountTypeF){
-            user1.accountType = newaccountType;
-        }
+        user1.accountType = newaccountType;
         if(nameF){
             user1.FullName = newfullname;
         }
