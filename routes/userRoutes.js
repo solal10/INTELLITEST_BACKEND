@@ -12,8 +12,6 @@ router.post('/delete', userFuncs.deleteUser);
 
 router.post('/get', userFuncs.getUser);
 
-router.post('/getModels', userFuncs.getUserModels);
-
 router.post('/recover-password', userFuncs.recoverPassword);
 
 
