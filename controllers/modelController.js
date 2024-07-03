@@ -86,27 +86,27 @@ exports.getModel = async (req, res) => {
 
 exports.getAllModels = async (req, res) => {
     try {
-        // const { email } = req.body;
-        // if (!email) {
-        //     console.log('Missing required fields');
-        //     res.status(400).json({ error: 'Missing required fields' });
-        //     return;
-        // }
-        // let user_id = await user.findOne({ Email: email }, '_id');
-        // if (!user_id) {
-        //     console.log('User does not exist');
-        //     res.status(400).json({ error: 'User does not exist' });
-        //     return;
-        // }
-        const {user_id} = req.body.id;
-        let models = await model.find({ user_id: user_id});
+        const user_id = req.body.id;
+
+        if (!user_id) {
+            console.log('Missing required fields');
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        console.log(user_id);
+        let models = await model.find({ user_id: user_id });
+
+        if (models.length === 0) {
+            console.log('No models found for user');
+            return res.status(200).json({});
+        }
+
         res.status(200).json(models);
-    }
-    catch (err) {
+    } catch (err) {
         console.log(err);
-        res.status(500).json({ error: err });
+        res.status(500).json({ error: err.message });
     }
-}
+};
+
 
 exports.updateModel = async (req, res) => {
     try {
