@@ -99,12 +99,12 @@ exports.getAllModels = async (req, res) => {
         //     return;
         // }
         const {user_id} = req.body.id;
-        let models = await model.findAll({ user_id: user_id});
+        let models = await model.find({ user_id: user_id});
         res.status(200).json(models);
     }
     catch (err) {
         console.log(err);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: err });
     }
 }
 
