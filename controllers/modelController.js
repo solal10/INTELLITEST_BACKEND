@@ -97,7 +97,7 @@ exports.getAllModels = async (req, res) => {
 
         if (models.length === 0) {
             console.log('No models found for user');
-            return res.status(200).json({});
+            return res.status(200).json([]); // Return an empty array if no models are found
         }
 
         res.status(200).json(models);
@@ -106,6 +106,7 @@ exports.getAllModels = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
 
 
 exports.updateModel = async (req, res) => {
