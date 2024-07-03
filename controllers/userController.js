@@ -256,23 +256,6 @@ exports.getUser = async (req, res) => {
     }
 }
 
-exports.getUserModels = async (req, res) => {
-    try {
-        const { email } = req.body;
-        if (!email) {
-            console.log('Missing required fields');
-            res.status(400).json({ error: 'Missing required fields' });
-            return;
-        }
-        let models = await model.find({ user_id: user1._id });
-        console.log('Models found');
-        res.status(200).json(models);
-    } catch (err) {
-        console.error('Error getting user models:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-}
-
 exports.recoverPassword = async (req, res) => {
     try {
         const { email } = req.body;

@@ -86,19 +86,20 @@ exports.getModel = async (req, res) => {
 
 exports.getAllModels = async (req, res) => {
     try {
-        const { email } = req.body;
-        if (!email) {
-            console.log('Missing required fields');
-            res.status(400).json({ error: 'Missing required fields' });
-            return;
-        }
-        let user_id = await user.findOne({ Email: email }, '_id');
-        if (!user_id) {
-            console.log('User does not exist');
-            res.status(400).json({ error: 'User does not exist' });
-            return;
-        }
-        let models = await model.find({ user_id: user_id});
+        // const { email } = req.body;
+        // if (!email) {
+        //     console.log('Missing required fields');
+        //     res.status(400).json({ error: 'Missing required fields' });
+        //     return;
+        // }
+        // let user_id = await user.findOne({ Email: email }, '_id');
+        // if (!user_id) {
+        //     console.log('User does not exist');
+        //     res.status(400).json({ error: 'User does not exist' });
+        //     return;
+        // }
+        const {user_id} = req.body.id;
+        let models = await model.findAll({ user_id: user_id});
         res.status(200).json(models);
     }
     catch (err) {
@@ -162,4 +163,9 @@ exports.getModelHistory = async (req, res) => {
         console.log(err);
         res.status(500).json({ error: 'Internal server error' });
     }
+}
+
+
+exports.modelToolkitLearn = async (req,res) => {
+    
 }

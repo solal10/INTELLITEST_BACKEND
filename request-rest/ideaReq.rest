@@ -7,3 +7,13 @@ Content-Type: application/json
     "email": "eeeeeeea@gmail.com",
     "idea": "Elad is the king of backend"
 }
+
+
+###
+
+POST http://199.203.9.196:3000/runImprovement
+Content-Type: application/json
+
+{
+    "db": "uploads/newData_2024-07-03_11-18-53.csv"
+}

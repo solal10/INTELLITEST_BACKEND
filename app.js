@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
-const dotenv = require('dotenv').config();
 const PORT = process.env.PORT;
 const mongoose =require('mongoose');
 const bodyParser = require('body-parser');
 const userroutes = require('./routes/userRoutes');
+const modelroutes = require('./routes/modelRoutes');
 const idea = require('./routes/IdeasRoutes');
 
 
@@ -25,7 +25,7 @@ app.options('*', cors()); // Enable preflight requests for all routes
 
 app.use('/user', userroutes);
 app.use('/idea', idea);
-
+app.use('/model',modelroutes)
 
 app.get('/', (req, res) => {    
     res.send('Hello World!');
