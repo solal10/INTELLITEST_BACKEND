@@ -1,27 +1,54 @@
-const model = require('../models/model');
+const aModel = require('../models/model');
 
 exports.addModel = async (req, res) => {
     try {
-        const { name, CSVpath, user_id, check1,check2,check3,check4,check5} = req.body;
-        if (!name || !CSVpath || !user_id ) {
+        const {
+            name,
+            CSVpath,
+            encode_csv,
+            scale_csv,
+            user_id,
+            impute,
+            encode,
+            scale,
+            feature_select,
+            remove_outliers
+        } = req.body;
+
+        if (!name || !CSVpath || !user_id || impute === undefined || encode === undefined || scale === undefined || feature_select === undefined || remove_outliers === undefined) {
             console.log('Missing required fields');
             res.status(400).json({ error: 'Missing required fields' });
             return;
-        }       
-        let model = await model.findOne({ name: name, user_id: user_id });
+        }
+
+        let model = await aModel.findOne({ name, user_id });
         if (model) {
-            console.log('Model already exist');
-            res.status(400).json({ error: 'Model already exist' });
+            console.log('Model already exists');
+            res.status(400).json({ error: 'Model already exists' });
             return;
         }
-        let newModel = new model({ name, CSVpath, user_id,check1,check2,check3,check4,check5});
+
+        let newModel = new aModel({
+            name,
+            CSVpath,
+            user_id,
+            impute,
+            encode,
+            scale,
+            feature_select,
+            remove_outliers,
+            encode_csv,
+            scale_csv
+        });
+
         await newModel.save();
         res.status(200).json({ message: 'Model added successfully' });
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: 'Internal server error' });
     }
-}
+};
+
 
 exports.deleteModel = async (req, res) => {
     try {
@@ -37,13 +64,13 @@ exports.deleteModel = async (req, res) => {
             res.status(400).json({ error: 'User does not exist' });
             return;
         }
-        let model1 = await model.findOne({ name: name, user_id: user_id});
+        let model1 = await aModel.findOne({ name: name, user_id: user_id});
         if (!model1) {
             console.log('Model does not exist');
             res.status(400).json({ error: 'Model does not exist' });
             return;
         }
-        let res = await model.deleteOne({ name: name, user_id: user_id});
+        let res = await aModel.deleteOne({ name: name, user_id: user_id});
         if (res.deletedCount === 0) {
             console.log('model does not exist');
             res.status(500).json({ error: 'Error deleting model' });
