@@ -84,19 +84,8 @@ exports.deleteModel = async (req, res) => {
 
 exports.getModel = async (req, res) => {
     try {
-        const { name, email } = req.body;
-        if (!name || !email) {
-            console.log('Missing required fields');
-            res.status(400).json({ error: 'Missing required fields' });
-            return;
-        }
-        let user_id = await user.findOne({ Email: email }, '_id');
-        if (!user_id) {
-            console.log('User does not exist');
-            res.status(400).json({ error: 'User does not exist' });
-            return;
-        }
-        let model1 = await model.findOne({ name: name, user_id: user_id});
+        const { model_id } = req.body;
+        let model1 = await aModel.findOne({ _id:model_id});
         if (!model1) {
             console.log('Model does not exist');
             res.status(400).json({ error: 'Model does not exist' });
