@@ -1,4 +1,5 @@
 const aModel = require('../models/model');
+const aModelHistory = require('../models/modelhistory');
 
 exports.addModel = async (req, res) => {
     try {
@@ -51,25 +52,14 @@ exports.addModel = async (req, res) => {
 
 exports.deleteModel = async (req, res) => {
     try {
-        const { name, email } = req.body;
-        if (!name || !email) {
+        const { model_id } = req.body;
+        if (!model_id) {
             console.log('Missing required fields');
             res.status(400).json({ error: 'Missing required fields' });
             return;
         }
-        let user_id = await user.findOne({ Email: email }, '_id');
-        if (!user_id) {
-            console.log('User does not exist');
-            res.status(400).json({ error: 'User does not exist' });
-            return;
-        }
-        let model1 = await aModel.findOne({ name: name, user_id: user_id});
-        if (!model1) {
-            console.log('Model does not exist');
-            res.status(400).json({ error: 'Model does not exist' });
-            return;
-        }
-        let res = await aModel.deleteOne({ name: name, user_id: user_id});
+        let res1 = await aModelHistory.deleteMany({model_id:model_id})
+        let res2 = await aModel.deleteOne({ _id:model_id});
         if (res.deletedCount === 0) {
             console.log('model does not exist');
             res.status(500).json({ error: 'Error deleting model' });
@@ -126,19 +116,14 @@ exports.getAllModels = async (req, res) => {
 
 exports.updateModel = async (req, res) => {
     try {
-        const { name,email, newCSVpath } = req.body;
-        if (!name || !email || !newCSVpath) {
+        const { model_id,CSVpath, encode_csv,scale_csv } = req.body;
+        if (!model_id || !CSVpath || !encode_csv || !scale_csv) {
             console.log('Missing required fields');
             res.status(400).json({ error: 'Missing required fields' });
             return;
         }
-        let user_id = await user.findOne({ Email : email }, '_id');
-        if (!user_id) {
-            console.log('User does not exist');
-            res.status(400).json({ error: 'User does not exist' });
-            return;
-        }
-        let model1 = findOneAndUpdate({ name: name, user_id: user_id}, { CSVpath: newCSVpath });
+        
+        let model1 = aModel.findOneAndUpdate({ _id:model_id}, { CSVpath: CSVpath,encode_csv:encode_csv,scale_csv:scale_csv });
         if (!model1) {
             console.log('Model does not exist');
             res.status(400).json({ error: 'Model does not exist' });
