@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const userroutes = require('./routes/userRoutes');
 const modelroutes = require('./routes/modelRoutes');
 const idea = require('./routes/IdeasRoutes');
+const modelhistory = require('./routes/modelHistoryRoutes');
 
 
 const cors = require('cors');
@@ -26,7 +27,8 @@ app.options('*', cors()); // Enable preflight requests for all routes
 
 app.use('/user', userroutes);
 app.use('/idea', idea);
-app.use('/model',modelroutes)
+app.use('/model',modelroutes);
+app.use('/modelHistory',modelhistory);
 
 app.get('/', (req, res) => {    
     res.send('Hello World!');

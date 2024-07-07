@@ -40,9 +40,8 @@ exports.addModel = async (req, res) => {
             encode_csv,
             scale_csv
         });
-
         await newModel.save();
-        res.status(200).json({ message: 'Model added successfully' });
+        res.status(200).json({ data: newModel._id, message: 'Model added successfully' });
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: 'Internal server error' });
@@ -120,7 +119,7 @@ exports.getAllModels = async (req, res) => {
             return res.status(400).json({ error: 'Missing required fields' });
         }
         console.log(user_id);
-        let models = await model.find({ user_id: user_id });
+        let models = await aModel.find({ user_id: user_id });
 
         if (models.length === 0) {
             console.log('No models found for user');
