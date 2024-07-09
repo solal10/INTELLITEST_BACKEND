@@ -8,6 +8,8 @@ const modelSchema = new mongoose.Schema({
     encode: { type: Boolean, required: true },
     scale: { type: Boolean, required: true },
     feature_select: { type: Boolean, required: true },
+    k: {type:Number,required:true},
+    target: {type:String,required:true},
     remove_outliers: { type: Boolean, required: true },
     encode_csv: { type: String },
     scale_csv: { type: String },

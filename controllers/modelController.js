@@ -13,10 +13,12 @@ exports.addModel = async (req, res) => {
             encode,
             scale,
             feature_select,
+            k,
+            target,
             remove_outliers
         } = req.body;
 
-        if (!name || !CSVpath || !user_id || impute === undefined || encode === undefined || scale === undefined || feature_select === undefined || remove_outliers === undefined) {
+        if (!name || !CSVpath || !user_id || impute === undefined || encode === undefined || scale === undefined || feature_select === undefined || remove_outliers === undefined || !k || !target) {
             console.log('Missing required fields');
             res.status(400).json({ error: 'Missing required fields' });
             return;
@@ -37,6 +39,8 @@ exports.addModel = async (req, res) => {
             encode,
             scale,
             feature_select,
+            k,
+            target,
             remove_outliers,
             encode_csv,
             scale_csv
@@ -58,8 +62,8 @@ exports.deleteModel = async (req, res) => {
             res.status(400).json({ error: 'Missing required fields' });
             return;
         }
-        let res1 = await aModelHistory.deleteMany({model_id:model_id})
-        let res2 = await aModel.deleteOne({ _id:model_id});
+        await aModelHistory.deleteMany({model_id:model_id})
+        await aModel.deleteOne({ _id:model_id});
         if (res.deletedCount === 0) {
             console.log('model does not exist');
             res.status(500).json({ error: 'Error deleting model' });
