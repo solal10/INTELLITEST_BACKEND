@@ -167,6 +167,39 @@ exports.getModelHistory = async (req, res) => {
 }
 
 
-exports.modelToolkitLearn = async (req,res) => {
-    
+exports.startLearn = async(req,res) => {
+    try{
+        const model_id = req.body.model_id;
+        console.log("solalalala" + model_id);
+        const res1 = await aModel.updateOne({_id:model_id},{isRunning:true})
+        console.log("solalalala" + res1);
+        if(!res1){
+            console.log('Model does not exist');
+            res.status(400).json({ error: 'Model does not exist' });
+            return;
+        }
+        console.log("solalalala");
+        res.status(200).json({message:'good'});
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+exports.finishLearn = async(req,res) => {
+    try{
+        const model_id = req.body.model_id;
+        const res1 = await aModel.updateOne({_id:model_id},{isRunning:false})
+        if(!res1){
+            console.log('Model does not exist');
+            res.status(400).json({ error: 'Model does not exist' });
+            return;
+        }
+        res.status(200).json({message:'good'});
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 }

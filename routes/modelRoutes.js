@@ -14,5 +14,9 @@ router.post('/update', userFuncs.updateModel);
 
 router.post('/history', userFuncs.getModelHistory);
 
+router.post('/startLearn',userFuncs.startLearn);
+
+router.post('/finishLearn',userFuncs.finishLearn);
+
 
 module.exports = router;
