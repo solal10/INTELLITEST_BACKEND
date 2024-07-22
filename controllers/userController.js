@@ -211,7 +211,7 @@ exports.editUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
     try {
-        const { email } = req.body;
+        const { email , password} = req.body;
         if (!email) {
             console.log('Missing required fields');
             res.status(400).json({ error: 'Missing required fields' });
@@ -222,6 +222,11 @@ exports.deleteUser = async (req, res) => {
             console.log('User does not exist');
             res.status(400).json({ error: 'User does not exist' });
             return;
+        }
+        const validPassword = await bcrypt.compare(password, user1.Password);
+        if (!validPassword) {
+            console.log('Invalid password');
+            return res.status(400).json({ error: 'Invalid password' });
         }
         await model.deleteMany({user_id: user1._id});
         await modelhistory.deleteMany({user_id: user1._id});
